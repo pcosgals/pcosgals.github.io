@@ -1,9 +1,20 @@
-import OpenAI from "openai";
-const client = new OpenAI();
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("generate-btn");
+  const output = document.getElementById("story-output");
 
-const response = await client.responses.create({
-    model: "gpt-4.1",
-    input: "Write a one-sentence bedtime story about a unicorn.",
+  button.addEventListener("click", () => {
+    output.textContent = "Loading...";
+
+    fetch("https://pcosgals-backend.onrender.com/generate", {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        output.textContent = data.text;
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        output.textContent = "Something went wrong. Please try again.";
+      });
+  });
 });
-
-console.log(response.output_text);
